@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ирина Романова](https://up.htmlacademy.ru/javascript/14/user/635997).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Фаллер] (https://htmlacademy.ru/profile/id505933).
 
 ---
 
