@@ -18,7 +18,7 @@ var LOCATION_Y_MAX = 630;
 var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
 
-var AMOUNT_CARDS = 8;
+var AMOUNT_ADVERTS = 8;
 var TITLES =
   [
     'Большая уютная квартира',
@@ -41,9 +41,14 @@ var PHOTOS =
   ];
 
 var getRandomElement = function (min, max) {
-  return Math.floor(Math.randon() * (max - min) + min);
+  return Math.floor(Math.random() * (max - min) + min);
 };
 
+var createDiffArrayLength = function (array) {
+  return array.slice(getRandomElement(0, array.length));
+};
+
+// Перемешивает массив
 var createMixArray = function (array) {
   var mixArray = function () {
     return Math.random() - 0.5;
@@ -51,5 +56,41 @@ var createMixArray = function (array) {
   return array.sort(mixArray);
 };
 
+var generateAdverts = function (countObjects) {
+  var arrayAdverts = [];
+  for (var i = 0; i < countObjects; i++) {
+    var objectAdvert = {
+      author: {
+        avatar: 'img/avatars/user0' + (i + 1) + '.png'
+      },
+
+      offer: {
+        title: TITLES[i],
+        address: location.x + ',' + location.y,
+        price: getRandomElement(PRICE_MIN_VALUE, PRICE_MAX_VALUE),
+        type: TYPES[getRandomElement(0, TYPES.length)],
+        rooms: getRandomElement(ROOMS_MIN_VALUE, ROOMS_MAX_VALUE),
+        guests: getRandomElement(GUESTS_MIN_VALUE, GUESTS_MAX_VALUE),
+        checkin: ARRIVAL_TIMES[getRandomElement(0, ARRIVAL_TIMES.length)],
+        checkout: DEPARTURE_TIMES[getRandomElement(0, DEPARTURE_TIMES.length)],
+        features: createDiffArrayLength(FEATURES),
+        description: '',
+        photos: createMixArray(PHOTOS)
+      },
+
+      location: {
+        x: getRandomElement(LOCATION_X_MIN, LOCATION_X_MAX),
+        y: getRandomElement(LOCATION_Y_MIN, LOCATION_Y_MAX)
+      }
+    };
+    arrayAdverts.push(objectAdvert);
+  }
+  return arrayAdverts;
+};
+
+var Adverts = generateAdverts(AMOUNT_ADVERTS);
+
+
+//  Переключает карту в активное состояние
 var globalMap = document.querySelector('.map');
 globalMap.classList.remove('map--faded');
