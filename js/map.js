@@ -37,8 +37,17 @@ var DEPARTURE_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS =
   [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
   ];
+
+var BUILDING_TYPES = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -56,6 +65,7 @@ var createMixArray = function (array) {
   return array.sort(mixArray);
 };
 
+// Генерация объявлений
 var generateAdverts = function (countObjects) {
   var arrayAdverts = [];
   for (var i = 0; i < countObjects; i++) {
@@ -88,9 +98,43 @@ var generateAdverts = function (countObjects) {
   return arrayAdverts;
 };
 
-var Adverts = generateAdverts(AMOUNT_ADVERTS);
+var adverts = generateAdverts(AMOUNT_ADVERTS);
+
+
+
+var globalMap = document.querySelector('.map');
+var mapPinsElement = globalMap.querySelector('.map__pins');
+var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
+var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
+var mapContainer = document.querySelector('.map__filters-container');
+
+// Отрисовка карточки
+var renderCard = function (objAdvert) {
+  var mapCard = templateMapCard.cloneNode(true);
+
+  mapCard.querySelector('.popup__title').textContent = objAdvert.offer.title;
+  mapCard.querySelector('.popup__text--address').textContent = objAdvert.offer.address;
+  mapCard.querySelector('.popup__text--price').textContent = objAdvert.offer.price + '₽/ночь';
+  mapCard.querySelector('.popup__type').textContent = BUILDING_TYPES[objAdvert.offer.type];
+  mapCard.querySelector('.popup__text--capacity').textContent = objAdvert.offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
+  mapCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + objAdvert.offer.checkin + ', выезд до ' + objAdvert.offer.checkout;
+  mapCard.querySelector('.popup__features');
+  mapCard.querySelector('.popup__description').textContent = objAdvert.offer.description;
+  mapCard.querySelector('.popup__photos');
+  mapCard.querySelector('.popup__avatar').textContent = objAdvert.author.avatar;
+
+  return mapCard;
+};
+
+
+
+В список .popup__features выведите все доступные удобства в объявлении.
+В блок .popup__description выведите описание объекта недвижимости offer.description.
+В блок .popup__photos выведите все фотографии из списка offer.photos. Каждая из строк массива photos должна записываться как src соответствующего изображения.
+Замените src у аватарки пользователя — изображения, которое записано в .popup__avatar — на значения поля author.avatar отрисовываемого объекта.
+
+var cardFragment = document.createDocumentFragment();
 
 
 //  Переключает карту в активное состояние
-var globalMap = document.querySelector('.map');
 globalMap.classList.remove('map--faded');
