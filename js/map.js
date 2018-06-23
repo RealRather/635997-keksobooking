@@ -126,7 +126,8 @@ var renderFeaturesAdvert = function (arrayFeatures) {
   var fragmentFeature = document.createDocumentFragment();
   for (var i = 0; i < arrayFeatures.length; i++) {
     var newTag = document.createElement('li');
-    newTag.classList.add('popup__feature' + '' + 'popup__feature--' + arrayFeatures[i]);
+    newTag.classList.add('popup__feature');
+    newTag.classList.add('popup__feature--' + arrayFeatures[i]);
     fragmentFeature.appendChild(newTag);
   }
   return fragmentFeature;
@@ -145,14 +146,17 @@ var renderPinAdvert = function (mapPin) {
 // Отрисовка карточки
 var renderCard = function (objAdvert) {
   var mapCard = templateMapCard.cloneNode(true);
-
+  var popupFeatures = mapCard.querySelector('.popup__features');
+  while (popupFeatures.firstChild) {
+    popupFeatures.removeChild(popupFeatures.firstChild);
+  }
   mapCard.querySelector('.popup__title').textContent = objAdvert.offer.title;
   mapCard.querySelector('.popup__text--address').textContent = objAdvert.offer.address;
   mapCard.querySelector('.popup__text--price').textContent = objAdvert.offer.price + '₽/ночь';
   mapCard.querySelector('.popup__type').textContent = BUILDING_TYPES[objAdvert.offer.type];
   mapCard.querySelector('.popup__text--capacity').textContent = objAdvert.offer.rooms + ' комнаты для ' + objAdvert.offer.guests + ' гостей';
   mapCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + objAdvert.offer.checkin + ', выезд до ' + objAdvert.offer.checkout;
-  mapCard.querySelector('.popup__features').innerHTML = '';
+  mapCard.querySelector('.popup__photos').innerHTML = '';
   mapCard.querySelector('.popup__features').appendChild(renderFeaturesAdvert(objAdvert.offer.features));
   mapCard.querySelector('.popup__description').textContent = objAdvert.offer.description;
   mapCard.querySelector('.popup__photos').innerHTML = '';
@@ -162,12 +166,18 @@ var renderCard = function (objAdvert) {
   return mapCard;
 };
 
-var pinFragment = document.createDocumentFragment();
-for (var i = 0; i < adverts.length; i++) {
-  pinFragment.appendChild(renderPinAdvert(adverts[i]));
-}
-mapPinsElement.appendChild(pinFragment);
+// Добавляет метки на страницу
+var createPins = function (arrayAdverts) {
+  var pinFragment = document.createDocumentFragment();
+  for (var i = 0; i < arrayAdverts.length; i++) {
+    pinFragment.appendChild(renderPinAdvert(arrayAdverts[i]));
+  }
+  return pinFragment;
+};
 
+mapPinsElement.appendChild(createPins(adverts));
+
+// Добавляет карточки на страницу
 var cardFragment = document.createDocumentFragment();
 cardFragment.appendChild(renderCard(adverts[0]));
 globalMap.insertBefore(cardFragment, mapContainer);
