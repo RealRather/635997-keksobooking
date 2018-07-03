@@ -105,10 +105,15 @@ var adverts = generateAdverts(AMOUNT_ADVERTS);
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
+var mapMainPin = document.querySelector('.map__pin--main');
 
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 var templatePhoto = templateMapCard.querySelector('.popup__photo');
+
+var formAd = document.querySelector('.ad-form');
+var formFieldsets = formAd.querySelectorAll('fieldset');
+var formInputAddress = formAd.querySelector('#address');
 
 // Создание списка фотографий в объявлении
 var renderPhotoAdvert = function (arrayPhotos) {
@@ -156,7 +161,6 @@ var renderCard = function (objAdvert) {
   mapCard.querySelector('.popup__type').textContent = BUILDING_TYPES[objAdvert.offer.type];
   mapCard.querySelector('.popup__text--capacity').textContent = objAdvert.offer.rooms + ' комнаты для ' + objAdvert.offer.guests + ' гостей';
   mapCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + objAdvert.offer.checkin + ', выезд до ' + objAdvert.offer.checkout;
-  mapCard.querySelector('.popup__photos').innerHTML = '';
   mapCard.querySelector('.popup__features').appendChild(renderFeaturesAdvert(objAdvert.offer.features));
   mapCard.querySelector('.popup__description').textContent = objAdvert.offer.description;
   mapCard.querySelector('.popup__photos').innerHTML = '';
@@ -175,12 +179,24 @@ var createPins = function (arrayAdverts) {
   return pinFragment;
 };
 
-mapPinsElement.appendChild(createPins(adverts));
-
 // Добавляет карточки на страницу
-var cardFragment = document.createDocumentFragment();
-cardFragment.appendChild(renderCard(adverts[0]));
-globalMap.insertBefore(cardFragment, mapContainer);
+var createCard = function (arrayAdverts) {
+  var cardFragment = document.createDocumentFragment();
+  cardFragment.appendChild(renderCard(arrayAdverts[0]));
+  return cardFragment;
+};
 
-//  Переключает карту в активное состояние
-globalMap.classList.remove('map--faded');
+var onButtonMainPinMouseUp = function () {
+  for (var i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].disabled = false;
+  }
+  // Переключает карту в активное состояние
+  globalMap.classList.remove('map--faded');
+  // Разблокирует поля формы
+  formAd.classList.remove('ad-form--disabled');
+
+  mapPinsElement.appendChild(createPins(adverts));
+  // globalMap.insertBefore(createCard(adverts), mapContainer);
+};
+
+mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
