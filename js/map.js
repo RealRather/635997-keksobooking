@@ -19,6 +19,8 @@ var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
 
 var AMOUNT_ADVERTS = 8;
+var AUXILIARY_ELEMENTS_COUNT = 2;
+
 var TITLES =
   [
     'Большая уютная квартира',
@@ -139,7 +141,7 @@ var renderFeaturesAdvert = function (arrayFeatures) {
 };
 
 // Создание метки в объявлении
-var renderPinAdvert = function (mapPin) {
+var getGeneratedPinAdvert = function (mapPin) {
   var pinAdvert = templateMapPin.cloneNode(true);
   pinAdvert.style.top = mapPin.location.y - MAP_PIN_HEIGHT + 'px';
   pinAdvert.style.left = mapPin.location.x - MAP_PIN_WIDTH / 2 + 'px';
@@ -149,7 +151,7 @@ var renderPinAdvert = function (mapPin) {
 };
 
 // Отрисовка карточки
-var renderCard = function (objAdvert) {
+var getGeneratedCard = function (objAdvert) {
   var mapCard = templateMapCard.cloneNode(true);
   var popupFeatures = mapCard.querySelector('.popup__features');
   while (popupFeatures.firstChild) {
@@ -174,16 +176,9 @@ var renderCard = function (objAdvert) {
 var createPins = function (arrayAdverts) {
   var pinFragment = document.createDocumentFragment();
   for (var i = 0; i < arrayAdverts.length; i++) {
-    pinFragment.appendChild(renderPinAdvert(arrayAdverts[i]));
+    pinFragment.appendChild(getGeneratedPinAdvert(arrayAdverts[i]));
   }
   return pinFragment;
-};
-
-// Добавляет карточки на страницу
-var createCard = function (arrayAdverts) {
-  var cardFragment = document.createDocumentFragment();
-  cardFragment.appendChild(renderCard(arrayAdverts[0]));
-  return cardFragment;
 };
 
 var onButtonMainPinMouseUp = function () {
@@ -196,7 +191,25 @@ var onButtonMainPinMouseUp = function () {
   formAd.classList.remove('ad-form--disabled');
 
   mapPinsElement.appendChild(createPins(adverts));
-  // globalMap.insertBefore(createCard(adverts), mapContainer);
+  mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
 };
 
+// Получает индекс узла
+var getIndexNode = function (documentNode) {
+  var indexNode;
+  var nodes = Array.prototype.slice.call(documentNode.parentNode.children);
+  indexNode = nodes.indexOf(documentNode);
+  return indexNode;
+};
+
+var onButtonRandomPinClick = function (evt) {
+  var documentNode = evt.target.closest('button');
+  if (!documentNode || documentNode.classList.contains('map__pin--main')) {
+    return;
+  }
+  globalMap.insertBefore(getGeneratedCard(adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]), mapContainer);
+};
+
+// Добавление обработчиков для карты и пинов
 mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+mapPinsElement.addEventListener('click', onButtonRandomPinClick);
