@@ -51,6 +51,19 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
+var globalMap = document.querySelector('.map');
+var mapPinsElement = globalMap.querySelector('.map__pins');
+var mapContainer = document.querySelector('.map__filters-container');
+var mapMainPin = document.querySelector('.map__pin--main');
+
+var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
+var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
+var templatePhoto = templateMapCard.querySelector('.popup__photo');
+
+var formAd = document.querySelector('.ad-form');
+var formFieldsets = formAd.querySelectorAll('fieldset');
+var formInputAddress = formAd.querySelector('#address');
+
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
@@ -103,19 +116,6 @@ var generateAdverts = function (countObjects) {
 };
 
 var adverts = generateAdverts(AMOUNT_ADVERTS);
-
-var globalMap = document.querySelector('.map');
-var mapPinsElement = globalMap.querySelector('.map__pins');
-var mapContainer = document.querySelector('.map__filters-container');
-var mapMainPin = document.querySelector('.map__pin--main');
-
-var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
-var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
-var templatePhoto = templateMapCard.querySelector('.popup__photo');
-
-var formAd = document.querySelector('.ad-form');
-var formFieldsets = formAd.querySelectorAll('fieldset');
-var formInputAddress = formAd.querySelector('#address');
 
 // Создание списка фотографий в объявлении
 var renderPhotoAdvert = function (arrayPhotos) {
@@ -210,6 +210,6 @@ var onButtonRandomPinClick = function (evt) {
   globalMap.insertBefore(getGeneratedCard(adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]), mapContainer);
 };
 
-// Добавление обработчиков для карты и пинов
+// Добавление обработчиков для карты и меток
 mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
