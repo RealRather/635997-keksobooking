@@ -62,7 +62,7 @@ var templatePhoto = templateMapCard.querySelector('.popup__photo');
 
 var formAd = document.querySelector('.ad-form');
 var formFieldsets = formAd.querySelectorAll('fieldset');
-var formInputAddress = formAd.querySelector('#address');
+// var formInputAddress = formAd.querySelector('#address');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -181,10 +181,17 @@ var createPins = function (arrayAdverts) {
   return pinFragment;
 };
 
-var onButtonMainPinMouseUp = function () {
+var switchStateFieldset = function (fieldsetState) {
   for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = false;
+    formFieldsets[i].disabled = fieldsetState;
   }
+};
+
+// Перключает состояние у всех fieldset в форме
+switchStateFieldset(true);
+
+var onButtonMainPinMouseUp = function () {
+  switchStateFieldset(false);
   // Переключает карту в активное состояние
   globalMap.classList.remove('map--faded');
   // Разблокирует поля формы
@@ -196,10 +203,8 @@ var onButtonMainPinMouseUp = function () {
 
 // Получает индекс узла
 var getIndexNode = function (documentNode) {
-  var indexNode;
   var nodes = Array.prototype.slice.call(documentNode.parentNode.children);
-  indexNode = nodes.indexOf(documentNode);
-  return indexNode;
+  return nodes.indexOf(documentNode);
 };
 
 var onButtonRandomPinClick = function (evt) {
@@ -207,7 +212,11 @@ var onButtonRandomPinClick = function (evt) {
   if (!documentNode || documentNode.classList.contains('map__pin--main')) {
     return;
   }
-  globalMap.insertBefore(getGeneratedCard(adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]), mapContainer);
+  globalMap.insertBefore(
+      getGeneratedCard(
+          adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
+      ), mapContainer
+  );
 };
 
 // Добавление обработчиков для карты и меток
