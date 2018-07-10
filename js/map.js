@@ -201,8 +201,9 @@ var switchStateFieldset = function (fieldsetState) {
 // Присваивает адрес главной метке
 var assignAddressMapPin = function (isMapPin) {
   var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
+  var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
   formInputAddress.value = determineAddressMapPin(
-      MAP_PIN_INITIAL_HEIHT, widthMapPin, mapMainPin
+      heightMapPin, widthMapPin, mapMainPin
   );
 };
 
