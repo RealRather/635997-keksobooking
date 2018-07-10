@@ -186,12 +186,10 @@ var createPins = function (arrayAdverts) {
 
 // Определяет адрес метки
 var determineAddressMapPin = function (heightPin, widthPin, pin) {
-  var pinAddress;
   var pinLocationY = heightPin + parseInt(pin.style.top, 10);
   var pinLocationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
 
-  pinAddress = pinLocationX + ', ' + pinLocationY;
-  return pinAddress;
+  return pinLocationX + ', ' + pinLocationY;
 };
 
 var switchStateFieldset = function (fieldsetState) {
