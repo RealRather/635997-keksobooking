@@ -18,6 +18,9 @@ var LOCATION_Y_MAX = 630;
 var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
 
+var MAP_PIN_INITIAL_WIDTH = 65;
+var MAP_PIN_INITIAL_HEIHT = 65;
+
 var AMOUNT_ADVERTS = 8;
 var AUXILIARY_ELEMENTS_COUNT = 2;
 
@@ -62,7 +65,7 @@ var templatePhoto = templateMapCard.querySelector('.popup__photo');
 
 var formAd = document.querySelector('.ad-form');
 var formFieldsets = formAd.querySelectorAll('fieldset');
-// var formInputAddress = formAd.querySelector('#address');
+var formInputAddress = formAd.querySelector('#address');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -181,23 +184,49 @@ var createPins = function (arrayAdverts) {
   return pinFragment;
 };
 
+// Определяет адрес метки
+var determineAddressMapPin = function (heightPin, widthPin, pin) {
+  var pinAddress;
+  var pinLocationY = heightPin + parseInt(pin.style.top, 10);
+  var pinLocationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
+
+  pinAddress = pinLocationX + ', ' + pinLocationY;
+  return pinAddress;
+};
+
 var switchStateFieldset = function (fieldsetState) {
   for (var i = 0; i < formFieldsets.length; i++) {
     formFieldsets[i].disabled = fieldsetState;
   }
 };
 
-// Перключает состояние у всех fieldset в форме
+// Присваивает адрес главной метке
+var assignAddressMapPin = function (isMapPin) {
+  var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
+  formInputAddress.value = determineAddressMapPin(
+      MAP_PIN_INITIAL_HEIHT, widthMapPin, mapMainPin
+  );
+};
+
+// Перeключает состояние у всех fieldset в форме
 switchStateFieldset(true);
+
+// Присваивает адрес главной метке(карта не активна)
+assignAddressMapPin(true);
 
 var onButtonMainPinMouseUp = function () {
   switchStateFieldset(false);
   // Переключает карту в активное состояние
   globalMap.classList.remove('map--faded');
+
   // Разблокирует поля формы
   formAd.classList.remove('ad-form--disabled');
 
   mapPinsElement.appendChild(createPins(adverts));
+
+  // Присваивает адрес главной метке(карта активна)
+  assignAddressMapPin(false);
+
   mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
 };
 
