@@ -54,13 +54,6 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
-var GUESTS_DEPENDING_ROOMS = {
-  1: [1],
-  2: [1, 2],
-  3: [1, 2, 3],
-  100: [0]
-}
-
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
@@ -75,6 +68,8 @@ var formFieldsets = formAd.querySelectorAll('fieldset');
 var formInputAddress = formAd.querySelector('#address');
 var formSelectTimeIn = formAd.querySelector('#timein');
 var formSelectTimeOut = formAd.querySelector('#timeout');
+var formSelectType = formAd.querySelector('#type');
+var formSelectPrice = formAd.querySelector('#price');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -267,6 +262,26 @@ var synceTime = function (firstTimer, secondTimer) {
   firstTimer.value = secondTimer.value;
 };
 
+var determinePrice = function (buildingType, buildingPrice) {
+  switch (buildingType.value) {
+    case 'bungalo':
+      buildingPrice.min = 0;
+      buildingPrice.placeholder = 0;
+      break;
+    case 'flat':
+      buildingPrice.min = 1000;
+      buildingPrice.placeholder = 1000;
+      break;
+    case 'house':
+      buildingPrice.min = 5000;
+      buildingPrice.placeholder = 5000;
+      break;
+    case 'palace':
+      buildingPrice.min = 10000;
+      buildingPrice.placeholder = 10000;
+  }
+};
+
 var onSelectTimeInChange = function () {
   synceTime(formSelectTimeOut, formSelectTimeIn);
 };
@@ -275,6 +290,13 @@ var onSelectTimeOutChange = function () {
   synceTime(formSelectTimeIn, formSelectTimeOut);
 };
 
-// Добавление обработчиков на время заезда и выезда
+var onSelectPriceChange = function () {
+  determinePrice(formSelectType, formSelectPrice);
+};
+
+// Добавление обработчиков синхронизации времени заезда и выезда
 formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
 formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
+
+// Добавление обработчика цены в зависимости от типа жилья
+formSelectType.addEventListener('change', onSelectPriceChange);
