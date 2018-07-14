@@ -54,6 +54,20 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
+var BUILDING_PRICE = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var GUESTS_DEPENDING_ROOMS = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
@@ -70,6 +84,8 @@ var formSelectTimeIn = formAd.querySelector('#timein');
 var formSelectTimeOut = formAd.querySelector('#timeout');
 var formSelectType = formAd.querySelector('#type');
 var formSelectPrice = formAd.querySelector('#price');
+var formSelectRoomCount = formAd.querySelector('#room_number');
+var formSelectRoomCapacity = formAd.querySelector('#capacity');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -262,23 +278,18 @@ var synceTime = function (firstTimer, secondTimer) {
   firstTimer.value = secondTimer.value;
 };
 
+// Определяет стоимость в сутки в зависимости от типа жилья
 var determinePrice = function (buildingType, buildingPrice) {
-  switch (buildingType.value) {
-    case 'bungalo':
-      buildingPrice.min = 0;
-      buildingPrice.placeholder = 0;
-      break;
-    case 'flat':
-      buildingPrice.min = 1000;
-      buildingPrice.placeholder = 1000;
-      break;
-    case 'house':
-      buildingPrice.min = 5000;
-      buildingPrice.placeholder = 5000;
-      break;
-    case 'palace':
-      buildingPrice.min = 10000;
-      buildingPrice.placeholder = 10000;
+  buildingPrice.min = BUILDING_PRICE[buildingType.value];
+  buildingPrice.placeholder = buildingPrice.min;
+};
+
+// Оганичивает число гостей в зависимости от числа комнат
+var limitGueststOptions = function (roomCount, roomCapacity) {
+  var limitGuests = GUESTS_DEPENDING_ROOMS[roomCount.value];
+  roomCapacity.setCustomValidity('');
+  if (limitGuests.indexOf(parseInt(roomCapacity.value, 10)) < 0) {
+    roomCapacity.setCustomValidity('Число гостей не подходит для данного количества комнат');
   }
 };
 
@@ -294,9 +305,17 @@ var onSelectPriceChange = function () {
   determinePrice(formSelectType, formSelectPrice);
 };
 
+var onSelectRoomCountChange = function () {
+  limitGueststOptions(formSelectRoomCount, formSelectRoomCapacity);
+};
+
 // Добавление обработчиков синхронизации времени заезда и выезда
 formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
 formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
 
 // Добавление обработчика цены в зависимости от типа жилья
 formSelectType.addEventListener('change', onSelectPriceChange);
+
+// Добавление обработчиков кол-ва мест от кол-ва комнат
+formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
+formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
