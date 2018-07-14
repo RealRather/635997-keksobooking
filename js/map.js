@@ -54,6 +54,13 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
+var GUESTS_DEPENDING_ROOMS = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+}
+
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
@@ -66,6 +73,8 @@ var templatePhoto = templateMapCard.querySelector('.popup__photo');
 var formAd = document.querySelector('.ad-form');
 var formFieldsets = formAd.querySelectorAll('fieldset');
 var formInputAddress = formAd.querySelector('#address');
+var formSelectTimeIn = formAd.querySelector('#timein');
+var formSelectTimeOut = formAd.querySelector('#timeout');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -250,3 +259,22 @@ var onButtonRandomPinClick = function (evt) {
 // Добавление обработчиков для карты и меток
 mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
+
+/* Cценарии взаимодействия пользователя с формой */
+
+// Синхронизирует время у двух полей
+var synceTime = function (firstTimer, secondTimer) {
+  firstTimer.value = secondTimer.value;
+};
+
+var onSelectTimeInChange = function () {
+  synceTime(formSelectTimeOut, formSelectTimeIn);
+};
+
+var onSelectTimeOutChange = function () {
+  synceTime(formSelectTimeIn, formSelectTimeOut);
+};
+
+// Добавление обработчиков на время заезда и выезда
+formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
+formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
