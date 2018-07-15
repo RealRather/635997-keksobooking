@@ -54,6 +54,20 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
+var BUILDING_PRICE = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+var GUESTS_DEPENDING_ROOMS = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
@@ -66,6 +80,12 @@ var templatePhoto = templateMapCard.querySelector('.popup__photo');
 var formAd = document.querySelector('.ad-form');
 var formFieldsets = formAd.querySelectorAll('fieldset');
 var formInputAddress = formAd.querySelector('#address');
+var formSelectTimeIn = formAd.querySelector('#timein');
+var formSelectTimeOut = formAd.querySelector('#timeout');
+var formSelectType = formAd.querySelector('#type');
+var formSelectPrice = formAd.querySelector('#price');
+var formSelectRoomCount = formAd.querySelector('#room_number');
+var formSelectRoomCapacity = formAd.querySelector('#capacity');
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -201,8 +221,9 @@ var switchStateFieldset = function (fieldsetState) {
 // Присваивает адрес главной метке
 var assignAddressMapPin = function (isMapPin) {
   var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
+  var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
   formInputAddress.value = determineAddressMapPin(
-      MAP_PIN_INITIAL_HEIHT, widthMapPin, mapMainPin
+      heightMapPin, widthMapPin, mapMainPin
   );
 };
 
@@ -249,3 +270,52 @@ var onButtonRandomPinClick = function (evt) {
 // Добавление обработчиков для карты и меток
 mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
+
+/* Cценарии взаимодействия пользователя с формой */
+
+// Синхронизирует время у двух полей
+var synceTime = function (firstTimer, secondTimer) {
+  firstTimer.value = secondTimer.value;
+};
+
+// Определяет стоимость в сутки в зависимости от типа жилья
+var determinePrice = function (buildingType, buildingPrice) {
+  buildingPrice.min = BUILDING_PRICE[buildingType.value];
+  buildingPrice.placeholder = buildingPrice.min;
+};
+
+// Оганичивает число гостей в зависимости от числа комнат
+var limitGueststOptions = function (roomCount, roomCapacity) {
+  var limitGuests = GUESTS_DEPENDING_ROOMS[roomCount.value];
+  roomCapacity.setCustomValidity('');
+  if (limitGuests.indexOf(parseInt(roomCapacity.value, 10)) < 0) {
+    roomCapacity.setCustomValidity('Число гостей не подходит для данного количества комнат');
+  }
+};
+
+var onSelectTimeInChange = function () {
+  synceTime(formSelectTimeOut, formSelectTimeIn);
+};
+
+var onSelectTimeOutChange = function () {
+  synceTime(formSelectTimeIn, formSelectTimeOut);
+};
+
+var onSelectPriceChange = function () {
+  determinePrice(formSelectType, formSelectPrice);
+};
+
+var onSelectRoomCountChange = function () {
+  limitGueststOptions(formSelectRoomCount, formSelectRoomCapacity);
+};
+
+// Добавление обработчиков синхронизации времени заезда и выезда
+formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
+formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
+
+// Добавление обработчика цены в зависимости от типа жилья
+formSelectType.addEventListener('change', onSelectPriceChange);
+
+// Добавление обработчиков кол-ва мест от кол-ва комнат
+formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
+formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
