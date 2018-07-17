@@ -319,7 +319,6 @@ formSelectType.addEventListener('change', onSelectPriceChange);
 formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
 formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
 
-
 // Перемещение главного маркера по карте
 mapMainPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -357,7 +356,10 @@ mapMainPin.addEventListener('mousedown', function (evt) {
     }
 
     if ((globalMap.style.left < newMainPinCoords.x) &&
-        (newMainPinCoords.x < globalMap.offsetWidth)) {
+        (newMainPinCoords.x < (
+          globalMap.offsetWidth - mapMainPin.offsetWidth)
+        )
+    ) {
       mapMainPin.style.left = newMainPinCoords.x + 'px';
     }
   };
