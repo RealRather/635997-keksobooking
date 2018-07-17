@@ -267,8 +267,7 @@ var onButtonRandomPinClick = function (evt) {
   );
 };
 
-// Добавление обработчиков для карты и меток
-mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+// Добавление обработчика для меток
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
 
 /* Cценарии взаимодействия пользователя с формой */
@@ -319,3 +318,68 @@ formSelectType.addEventListener('change', onSelectPriceChange);
 // Добавление обработчиков кол-ва мест от кол-ва комнат
 formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
 formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
+
+
+// Перемещение главного маркера по карте
+mapMainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  assignAddressMapPin(false);
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var newMainPinCoords = {
+      y: mapMainPin.offsetTop - shift.y,
+      x: mapMainPin.offsetLeft - shift.x
+    };
+
+    if ((LOCATION_Y_MIN < newMainPinCoords.y) &&
+        (newMainPinCoords.y < LOCATION_Y_MAX)) {
+      mapMainPin.style.top = newMainPinCoords.y + 'px';
+    }
+
+    if ((globalMap.style.left < newMainPinCoords.x) &&
+        (newMainPinCoords.x < globalMap.offsetWidth)) {
+      mapMainPin.style.left = newMainPinCoords.x + 'px';
+    }
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function (evt) {
+        evt.preventDefault();
+        mapMainPin.removeEventListener('click', onClickPreventDefault);
+      };
+      mapMainPin.addEventListener('click', onClickPreventDefault);
+    }
+
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+  assignAddressMapPin(false);
+});
+
