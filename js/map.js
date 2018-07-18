@@ -206,11 +206,12 @@ var createPins = function (arrayAdverts) {
 
 // Определяет адрес метки
 var determineAddressMapPin = function (heightPin, widthPin, pin) {
-  var locationY = heightPin + parseInt(pin.style.top, 10);
-  var locationX = Math.round(widthPin / 2) + parseInt(pin.style.left, 10);
-  var pinLocationX = (locationX < 0) ? 0 : locationX;
-  var pinLocationY = (locationY > globalMap.offsetWidth) ? globalMap.offsetWidth : locationY;
-
+  var pinLocationY = heightPin + parseInt(pin.style.top, 10);
+  var locationX = Math.round((widthPin / 2) + parseInt(pin.style.left, 10));
+  var pinLocationX = (parseInt(pin.style.left, 10) < 0) ? 0 : locationX;
+  if (pinLocationX > globalMap.offsetWidth) {
+    pinLocationX = globalMap.offsetWidth;
+  }
   return pinLocationX + ', ' + pinLocationY;
 };
 
@@ -225,7 +226,7 @@ var assignAddressMapPin = function (isMapPin) {
   var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
   var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
   formInputAddress.value = determineAddressMapPin(
-      heightMapPin, widthMapPin, mapMainPin
+    widthMapPin, heightMapPin, mapMainPin
   );
 };
 
@@ -360,7 +361,7 @@ mapMainPin.addEventListener('mousedown', function (evt) {
           globalMap.offsetWidth - mapMainPin.offsetWidth / 2)
         )
     ) {
-      if (newMainPinCoords.x < 0 - mapMainPin.offsetWidth / 2) {
+      if (newMainPinCoords.x < 0 - Math.round(mapMainPin.offsetWidth / 2)) {
         mapMainPin.style.left = 0 + 'px';
       } else {
         mapMainPin.style.left = newMainPinCoords.x + 'px';
