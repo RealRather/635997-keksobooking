@@ -350,7 +350,7 @@ mapMainPin.addEventListener('mousedown', function (evt) {
       x: mapMainPin.offsetLeft - shift.x
     };
     if ((LOCATION_Y_MIN - MAP_PIN_HEIGHT <= newMainPinCoords.y) &&
-        (newMainPinCoords.y < LOCATION_Y_MAX - MAP_PIN_HEIGHT)) {
+        (newMainPinCoords.y <= LOCATION_Y_MAX - MAP_PIN_HEIGHT)) {
       mapMainPin.style.top = newMainPinCoords.y + 'px';
     }
     if ((globalMap.style.left - (MAP_PIN_WIDTH / 2) <= newMainPinCoords.x) &&
