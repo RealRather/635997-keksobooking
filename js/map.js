@@ -206,9 +206,10 @@ var createPins = function (arrayAdverts) {
 
 // Определяет адрес метки
 var determineAddressMapPin = function (heightPin, widthPin, pin) {
-  var pinLocationY = heightPin + parseInt(pin.style.top, 10);
-  var locationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
+  var locationY = heightPin + parseInt(pin.style.top, 10);
+  var locationX = Math.round(widthPin / 2) + parseInt(pin.style.left, 10);
   var pinLocationX = (locationX < 0) ? 0 : locationX;
+  var pinLocationY = (locationY > globalMap.offsetWidth) ? globalMap.offsetWidth : locationY;
 
   return pinLocationX + ', ' + pinLocationY;
 };
