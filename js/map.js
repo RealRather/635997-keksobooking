@@ -349,15 +349,13 @@ mapMainPin.addEventListener('mousedown', function (evt) {
       y: mapMainPin.offsetTop - shift.y,
       x: mapMainPin.offsetLeft - shift.x
     };
-
-    if ((LOCATION_Y_MIN < newMainPinCoords.y) &&
-        (newMainPinCoords.y < LOCATION_Y_MAX)) {
+    if ((LOCATION_Y_MIN - MAP_PIN_HEIGHT <= newMainPinCoords.y) &&
+        (newMainPinCoords.y < LOCATION_Y_MAX - MAP_PIN_HEIGHT)) {
       mapMainPin.style.top = newMainPinCoords.y + 'px';
     }
-
-    if ((globalMap.style.left < newMainPinCoords.x) &&
-        (newMainPinCoords.x < (
-          globalMap.offsetWidth - mapMainPin.offsetWidth)
+    if ((globalMap.style.left - (MAP_PIN_WIDTH / 2) <= newMainPinCoords.x) &&
+        (newMainPinCoords.x <= (
+          globalMap.offsetWidth - mapMainPin.offsetWidth / 2)
         )
     ) {
       mapMainPin.style.left = newMainPinCoords.x + 'px';
