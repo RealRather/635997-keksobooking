@@ -207,10 +207,10 @@ var createPins = function (arrayAdverts) {
 // Определяет адрес метки
 var determineAddressMapPin = function (heightPin, widthPin, pin) {
   var pinLocationY = heightPin + parseInt(pin.style.top, 10);
-  var pinLocationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
-  var itogPinLocationX = (pinLocationX < 0) ? 0 : pinLocationX;
+  var locationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
+  var pinLocationX = (locationX < 0) ? 0 : locationX;
 
-  return itogPinLocationX + ', ' + pinLocationY;
+  return pinLocationX + ', ' + pinLocationY;
 };
 
 var switchStateFieldset = function (fieldsetState) {
@@ -365,6 +365,7 @@ mapMainPin.addEventListener('mousedown', function (evt) {
         mapMainPin.style.left = newMainPinCoords.x + 'px';
       }
     }
+    assignAddressMapPin(false);
   };
 
   var onMouseUp = function (upEvt) {
