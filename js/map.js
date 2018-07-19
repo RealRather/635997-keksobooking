@@ -15,11 +15,11 @@ var LOCATION_X_MAX = 900;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
-var MAP_PIN_WIDTH = 50;
-var MAP_PIN_HEIGHT = 70;
+var MAP_PIN_WIDTH = 65;
+var MAP_PIN_HEIGHT = 65;
 
-var MAP_PIN_INITIAL_WIDTH = 65;
-var MAP_PIN_INITIAL_HEIHT = 65;
+var MAP_PIN_INITIAL_WIDTH = 50;
+var MAP_PIN_INITIAL_HEIHT = 70;
 
 var AMOUNT_ADVERTS = 8;
 var AUXILIARY_ELEMENTS_COUNT = 2;
@@ -207,8 +207,11 @@ var createPins = function (arrayAdverts) {
 // Определяет адрес метки
 var determineAddressMapPin = function (heightPin, widthPin, pin) {
   var pinLocationY = heightPin + parseInt(pin.style.top, 10);
-  var pinLocationX = Math.floor(widthPin / 2) + parseInt(pin.style.left, 10);
-
+  var locationX = Math.round((widthPin / 2) + parseInt(pin.style.left, 10));
+  var pinLocationX = (parseInt(pin.style.left, 10) < 0) ? 0 : locationX;
+  if (pinLocationX > globalMap.offsetWidth) {
+    pinLocationX = globalMap.offsetWidth;
+  }
   return pinLocationX + ', ' + pinLocationY;
 };
 
@@ -267,8 +270,7 @@ var onButtonRandomPinClick = function (evt) {
   );
 };
 
-// Добавление обработчиков для карты и меток
-mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+// Добавление обработчика для меток
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
 
 /* Cценарии взаимодействия пользователя с формой */
@@ -319,3 +321,73 @@ formSelectType.addEventListener('change', onSelectPriceChange);
 // Добавление обработчиков кол-ва мест от кол-ва комнат
 formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
 formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
+
+// Перемещение главного маркера по карте
+mapMainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  assignAddressMapPin(false);
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var newMainPinCoords = {
+      y: mapMainPin.offsetTop - shift.y,
+      x: mapMainPin.offsetLeft - shift.x
+    };
+    if ((LOCATION_Y_MIN - mapMainPin.offsetHeight <= newMainPinCoords.y) &&
+        (newMainPinCoords.y <= LOCATION_Y_MAX - mapMainPin.offsetHeight)) {
+      mapMainPin.style.top = newMainPinCoords.y + 'px';
+    }
+    if ((globalMap.style.left - (mapMainPin.offsetWidth / 2) <= newMainPinCoords.x) &&
+        (newMainPinCoords.x <= (
+          globalMap.offsetWidth - mapMainPin.offsetWidth / 2)
+        )
+    ) {
+      if (newMainPinCoords.x < 0 - Math.round(mapMainPin.offsetWidth / 2)) {
+        mapMainPin.style.left = 0 + 'px';
+      } else {
+        mapMainPin.style.left = newMainPinCoords.x + 'px';
+      }
+    }
+    assignAddressMapPin(false);
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function () {
+        evt.preventDefault();
+        mapMainPin.removeEventListener('click', onClickPreventDefault);
+      };
+      mapMainPin.addEventListener('click', onClickPreventDefault);
+    }
+
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+  assignAddressMapPin(false);
+});
+
