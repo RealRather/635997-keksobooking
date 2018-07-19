@@ -22,7 +22,10 @@ var MAP_PIN_INITIAL_WIDTH = 50;
 var MAP_PIN_INITIAL_HEIHT = 70;
 
 var AMOUNT_ADVERTS = 8;
-var AUXILIARY_ELEMENTS_COUNT = 2;
+//var AUXILIARY_ELEMENTS_COUNT = 2;
+
+//var ESC_KEYCODE = 27;
+//var ENTER_KEYCODE = 13;
 
 var TITLES =
   [
@@ -69,8 +72,8 @@ var GUESTS_DEPENDING_ROOMS = {
 };
 
 var globalMap = document.querySelector('.map');
-var mapPinsElement = globalMap.querySelector('.map__pins');
-var mapContainer = document.querySelector('.map__filters-container');
+// var mapPinsElement = globalMap.querySelector('.map__pins');
+// var mapContainer = document.querySelector('.map__filters-container');
 var mapMainPin = document.querySelector('.map__pin--main');
 
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
@@ -251,28 +254,40 @@ var onButtonMainPinMouseUp = function () {
 
   mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
 };
-
+/*
 // Получает индекс узла
 var getIndexNode = function (documentNode) {
   var nodes = Array.prototype.slice.call(documentNode.parentNode.children);
   return nodes.indexOf(documentNode);
 };
-
 var onButtonRandomPinClick = function (evt) {
   var documentNode = evt.target.closest('button');
   if (!documentNode || documentNode.classList.contains('map__pin--main')) {
     return;
   }
-  globalMap.insertBefore(
-      getGeneratedCard(
-          adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
-      ), mapContainer
+  var randomCard = getGeneratedCard(
+      adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
   );
+   var popupCardClose = randomCard.querySelector('.popup__close');
+  var onPopupEscPress = function () {
+    if ((evt.keyCode === ESC_KEYCODE) || (evt.keyCode === ENTER_KEYCODE)) {
+      closePopup();
+    }
+  };
+  document.addEventListener('keydown', onPopupEscPress);
+  popupCardClose.addEventListener('click', function () {
+    closePopup();
+  });
+  var closePopup = function () {
+    randomCard.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+  };
+  globalMap.insertBefore(randomCard, mapContainer);
 };
 
 // Добавление обработчика для меток
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
-
+*/
 /* Cценарии взаимодействия пользователя с формой */
 
 // Синхронизирует время у двух полей
