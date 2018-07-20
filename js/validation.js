@@ -1,4 +1,4 @@
-'use sctirct';
+'use strict';
 
 (function () {
   var GUESTS_DEPENDING_ROOMS = {

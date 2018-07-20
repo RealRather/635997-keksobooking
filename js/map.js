@@ -21,12 +21,8 @@ var MAP_PIN_HEIGHT = 65;
 var MAP_PIN_INITIAL_WIDTH = 50;
 var MAP_PIN_INITIAL_HEIHT = 70;
 
-
 var AMOUNT_ADVERTS = 8;
 var AUXILIARY_ELEMENTS_COUNT = 2;
-
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
 
 var TITLES =
   [
@@ -58,8 +54,6 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
-
-
 var globalMap = document.querySelector('.map');
 var mapPinsElement = globalMap.querySelector('.map__pins');
 var mapContainer = document.querySelector('.map__filters-container');
@@ -69,8 +63,6 @@ var formInputAddress = document.querySelector('#address');
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 var templatePhoto = templateMapCard.querySelector('.popup__photo');
-
-
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -236,12 +228,14 @@ var onButtonRandomPinClick = function (evt) {
       adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
   );
   var popupCardClose = randomCard.querySelector('.popup__close');
+
   var onPopupEscPress = function () {
-    if ((evt.keyCode === ESC_KEYCODE) || (evt.keyCode === ENTER_KEYCODE)) {
-      closePopup();
-    }
+    window.util.isEscKeyCode(evt, closePopup);
   };
-  document.addEventListener('keydown', onPopupEscPress);
+
+  document.addEventListener('keydown', function () {
+    window.util.isEnterKeyCode(evt, onPopupEscPress);
+  });
   popupCardClose.addEventListener('click', function () {
     closePopup();
   });
@@ -255,16 +249,6 @@ var onButtonRandomPinClick = function (evt) {
 // Добавление обработчика для меток и карты
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
 mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
-
-
-
-/* //////////////////////////////////////////////////////////////////////////////// */
-
-
-/* ///////////////////////////////////////////////////////////*/
-
-
-
 
 // Перемещение главного маркера по карте
 mapMainPin.addEventListener('mousedown', function (evt) {
