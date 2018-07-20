@@ -21,11 +21,12 @@ var MAP_PIN_HEIGHT = 65;
 var MAP_PIN_INITIAL_WIDTH = 50;
 var MAP_PIN_INITIAL_HEIHT = 70;
 
-var AMOUNT_ADVERTS = 8;
-//var AUXILIARY_ELEMENTS_COUNT = 2;
 
-//var ESC_KEYCODE = 27;
-//var ENTER_KEYCODE = 13;
+var AMOUNT_ADVERTS = 8;
+var AUXILIARY_ELEMENTS_COUNT = 2;
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var TITLES =
   [
@@ -57,38 +58,19 @@ var BUILDING_TYPES = {
   bungalo: 'Бунгало'
 };
 
-var BUILDING_PRICE = {
-  bungalo: 0,
-  flat: 1000,
-  house: 5000,
-  palace: 10000
-};
 
-var GUESTS_DEPENDING_ROOMS = {
-  1: [1],
-  2: [1, 2],
-  3: [1, 2, 3],
-  100: [0]
-};
 
 var globalMap = document.querySelector('.map');
-// var mapPinsElement = globalMap.querySelector('.map__pins');
-// var mapContainer = document.querySelector('.map__filters-container');
+var mapPinsElement = globalMap.querySelector('.map__pins');
+var mapContainer = document.querySelector('.map__filters-container');
 var mapMainPin = document.querySelector('.map__pin--main');
+var formInputAddress = document.querySelector('#address');
 
 var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 var templateMapCard = document.querySelector('template').content.querySelector('.map__card');
 var templatePhoto = templateMapCard.querySelector('.popup__photo');
 
-var formAd = document.querySelector('.ad-form');
-var formFieldsets = formAd.querySelectorAll('fieldset');
-var formInputAddress = formAd.querySelector('#address');
-var formSelectTimeIn = formAd.querySelector('#timein');
-var formSelectTimeOut = formAd.querySelector('#timeout');
-var formSelectType = formAd.querySelector('#type');
-var formSelectPrice = formAd.querySelector('#price');
-var formSelectRoomCount = formAd.querySelector('#room_number');
-var formSelectRoomCapacity = formAd.querySelector('#capacity');
+
 
 var getRandomElement = function (min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -217,44 +199,29 @@ var determineAddressMapPin = function (heightPin, widthPin, pin) {
   }
   return pinLocationX + ', ' + pinLocationY;
 };
-
-var switchStateFieldset = function (fieldsetState) {
-  for (var i = 0; i < formFieldsets.length; i++) {
-    formFieldsets[i].disabled = fieldsetState;
-  }
-};
-
 // Присваивает адрес главной метке
 var assignAddressMapPin = function (isMapPin) {
   var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
   var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
-  formInputAddress.value = determineAddressMapPin(
-      heightMapPin, widthMapPin, mapMainPin
-  );
+  formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
 };
-
-// Перeключает состояние у всех fieldset в форме
-switchStateFieldset(true);
 
 // Присваивает адрес главной метке(карта не активна)
 assignAddressMapPin(true);
 
+
 var onButtonMainPinMouseUp = function () {
-  switchStateFieldset(false);
+  window.form.isSwitchStateFieldset(false);
   // Переключает карту в активное состояние
   globalMap.classList.remove('map--faded');
-
   // Разблокирует поля формы
-  formAd.classList.remove('ad-form--disabled');
-
+  window.formAd.classList.remove('ad-form--disabled');
   mapPinsElement.appendChild(createPins(adverts));
-
   // Присваивает адрес главной метке(карта активна)
   assignAddressMapPin(false);
-
   mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
 };
-/*
+
 // Получает индекс узла
 var getIndexNode = function (documentNode) {
   var nodes = Array.prototype.slice.call(documentNode.parentNode.children);
@@ -268,7 +235,7 @@ var onButtonRandomPinClick = function (evt) {
   var randomCard = getGeneratedCard(
       adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
   );
-   var popupCardClose = randomCard.querySelector('.popup__close');
+  var popupCardClose = randomCard.querySelector('.popup__close');
   var onPopupEscPress = function () {
     if ((evt.keyCode === ESC_KEYCODE) || (evt.keyCode === ENTER_KEYCODE)) {
       closePopup();
@@ -285,57 +252,19 @@ var onButtonRandomPinClick = function (evt) {
   globalMap.insertBefore(randomCard, mapContainer);
 };
 
-// Добавление обработчика для меток
+// Добавление обработчика для меток и карты
 mapPinsElement.addEventListener('click', onButtonRandomPinClick);
-*/
-/* Cценарии взаимодействия пользователя с формой */
+mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
 
-// Синхронизирует время у двух полей
-var synceTime = function (firstTimer, secondTimer) {
-  firstTimer.value = secondTimer.value;
-};
 
-// Определяет стоимость в сутки в зависимости от типа жилья
-var determinePrice = function (buildingType, buildingPrice) {
-  buildingPrice.min = BUILDING_PRICE[buildingType.value];
-  buildingPrice.placeholder = buildingPrice.min;
-};
 
-// Оганичивает число гостей в зависимости от числа комнат
-var limitGueststOptions = function (roomCount, roomCapacity) {
-  var limitGuests = GUESTS_DEPENDING_ROOMS[roomCount.value];
-  roomCapacity.setCustomValidity('');
-  if (limitGuests.indexOf(parseInt(roomCapacity.value, 10)) < 0) {
-    roomCapacity.setCustomValidity('Число гостей не подходит для данного количества комнат');
-  }
-};
+/* //////////////////////////////////////////////////////////////////////////////// */
 
-var onSelectTimeInChange = function () {
-  synceTime(formSelectTimeOut, formSelectTimeIn);
-};
 
-var onSelectTimeOutChange = function () {
-  synceTime(formSelectTimeIn, formSelectTimeOut);
-};
+/* ///////////////////////////////////////////////////////////*/
 
-var onSelectPriceChange = function () {
-  determinePrice(formSelectType, formSelectPrice);
-};
 
-var onSelectRoomCountChange = function () {
-  limitGueststOptions(formSelectRoomCount, formSelectRoomCapacity);
-};
 
-// Добавление обработчиков синхронизации времени заезда и выезда
-formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
-formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
-
-// Добавление обработчика цены в зависимости от типа жилья
-formSelectType.addEventListener('change', onSelectPriceChange);
-
-// Добавление обработчиков кол-ва мест от кол-ва комнат
-formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
-formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
 
 // Перемещение главного маркера по карте
 mapMainPin.addEventListener('mousedown', function (evt) {
@@ -402,7 +331,6 @@ mapMainPin.addEventListener('mousedown', function (evt) {
   };
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-  mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+
   assignAddressMapPin(false);
 });
-
