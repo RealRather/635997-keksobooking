@@ -81,6 +81,30 @@ window.map = (function () {
     mapCard.querySelector('.popup__photos').appendChild(renderPhotoAdvert(objAdvert.offer.photos));
     mapCard.querySelector('.popup__avatar').src = objAdvert.author.avatar;
 
+    var popupCardClose = mapCard.querySelector('.popup__close');
+    var popupCard = globalMap.querySelector('.map__card');
+
+    if (!popupCard) {
+      globalMap.insertBefore(mapCard, mapContainer);
+    } else {
+      globalMap.replaceChild(mapCard, popupCard);
+    }
+
+    var onPopupEscPress = function (evt) {
+      window.util.isEscKeyCode(evt, closePopup);
+    };
+
+    document.addEventListener('keydown', onPopupEscPress);
+
+    var closePopup = function () {
+      mapCard.classList.add('hidden');
+      globalMap.removeChild(mapCard);
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
+
+    popupCardClose.addEventListener('click', function () {
+      closePopup();
+    });
     return mapCard;
   };
 
@@ -139,24 +163,9 @@ window.map = (function () {
     var randomCard = getGeneratedCard(
         window.generateAdverts.adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
-    var popupCardClose = randomCard.querySelector('.popup__close');
-
-    var onPopupEscPress = function () {
-      window.util.isEscKeyCode(evt, closePopup);
-    };
-
-    document.addEventListener('keydown', function () {
-      window.util.isEnterKeyCode(evt, onPopupEscPress);
-    });
-    popupCardClose.addEventListener('click', function () {
-      closePopup();
-    });
-    var closePopup = function () {
-      randomCard.classList.add('hidden');
-      document.removeEventListener('keydown', onPopupEscPress);
-    };
     globalMap.insertBefore(randomCard, mapContainer);
   };
+
 
   // Добавление обработчика для меток и карты
   mapPinsElement.addEventListener('click', onButtonRandomPinClick);
