@@ -58,7 +58,7 @@
   var getGeneratedAdverts = function (countObjects) {
     var arrayAdverts = [];
     for (var i = 0; i < countObjects; i++) {
-      var yPoint = getRandomElement(window.LOCATION_Y_MIN, window.LOCATION_Y_MAX);
+      var yPoint = getRandomElement(window.map.LOCATION_Y_MIN, window.map.LOCATION_Y_MAX);
       var xPoint = getRandomElement(LOCATION_X_MIN, LOCATION_X_MAX);
       var objectAdvert = {
         author: {
