@@ -61,7 +61,7 @@
   assignAddressMapPin(true);
 
   var onButtonMainPinMouseUp = function () {
-    window.form.isSwitchStateFieldset(false);
+    window.form.switchStateFieldset(false);
     // Переключает карту в активное состояние
     globalMap.classList.remove('map--faded');
     // Разблокирует поля формы

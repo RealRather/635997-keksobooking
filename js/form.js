@@ -35,10 +35,6 @@
   formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
 
   window.form = {
-    isSwitchStateFieldset: function (state) {
-      for (var i = 0; i < formFieldsets.length; i++) {
-        formFieldsets[i].disabled = state;
-      }
-    }
+    switchStateFieldset: switchStateFieldset
   };
 })();
