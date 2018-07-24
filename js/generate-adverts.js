@@ -1,6 +1,6 @@
 'use strict';
 
-window.generateAdverts = (function () {
+(function () {
   var PRICE_MIN_VALUE = 1000;
   var PRICE_MAX_VALUE = 1000000;
 
@@ -88,9 +88,9 @@ window.generateAdverts = (function () {
     }
     return arrayAdverts;
   };
-  var generatedAdverts = getGeneratedAdverts(AMOUNT_ADVERTS);
 
-  return {
-    adverts: generatedAdverts
+  var adverts = getGeneratedAdverts(AMOUNT_ADVERTS);
+  window.generateAdverts = {
+    adverts: adverts
   };
 })();
