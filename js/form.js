@@ -1,7 +1,7 @@
 'use strict';
 
 /* Cценарии взаимодействия пользователя с формой */
-window.form = (function () {
+(function () {
 
   window.formAd = document.querySelector('.ad-form');
   var formFieldsets = document.querySelectorAll('fieldset');
@@ -34,11 +34,7 @@ window.form = (function () {
   formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
   formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
 
-  return {
-    isSwitchStateFieldset: function (state) {
-      for (var i = 0; i < formFieldsets.length; i++) {
-        formFieldsets[i].disabled = state;
-      }
-    }
+  window.form = {
+    switchStateFieldset: switchStateFieldset
   };
 })();
