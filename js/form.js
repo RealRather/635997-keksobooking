@@ -3,10 +3,11 @@
 /* Cценарии взаимодействия пользователя с формой */
 (function () {
 
-  window.formAd = document.querySelector('.ad-form');
-  var formFieldsets = document.querySelectorAll('fieldset');
-  var formSelectTimeIn = document.querySelector('#timein');
-  var formSelectTimeOut = document.querySelector('#timeout');
+  var formAd = document.querySelector('.ad-form');
+  var formFieldsets = formAd.querySelectorAll('fieldset');
+  var formSelectTimeIn = formAd.querySelector('#timein');
+  var formSelectTimeOut = formAd.querySelector('#timeout');
+  var formInputAddress = formAd.querySelector('#address');
 
   var switchStateFieldset = function (fieldsetState) {
     for (var i = 0; i < formFieldsets.length; i++) {
@@ -34,7 +35,33 @@
   formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
   formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
 
+  var displayError = function (errorMessage) {
+    var node = document.createElement('div');
+
+    node.style =
+      'z-index: 200; ' +
+      'margin: 0 auto; ' +
+      'padding: 20px 10px; ' +
+      'text-align: center; ' +
+      'background-color: darkred;'
+    ;
+    node.style.position = 'fixed';
+    node.style.left = '0';
+    node.style.right = '0';
+    node.style.top = '30%';
+    node.style.color = 'white';
+    node.style.fontSize = '30px';
+    node.style.height = '70px';
+    node.style.width = '50%';
+
+    node.textContent = errorMessage;
+    document.body.appendChild(node);
+  };
+
   window.form = {
-    switchStateFieldset: switchStateFieldset
+    formAd: formAd,
+    formInputAddress: formInputAddress,
+    switchStateFieldset: switchStateFieldset,
+    displayError: displayError
   };
 })();

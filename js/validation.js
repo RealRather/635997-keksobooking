@@ -15,10 +15,12 @@
     palace: 10000
   };
 
-  var formSelectRoomCount = document.querySelector('#room_number');
-  var formSelectRoomCapacity = document.querySelector('#capacity');
-  var formSelectType = document.querySelector('#type');
-  var formSelectPrice = document.querySelector('#price');
+  var formSelectRoomCount = window.form.formAd.querySelector('#room_number');
+  var formSelectRoomCapacity = window.form.formAd.querySelector('#capacity');
+  var formSelectType = window.form.formAd.querySelector('#type');
+  var formSelectPrice = window.form.formAd.querySelector('#price');
+  // var formButtonSubmit = window.form.formAd.querySelector('.ad-form__submit');
+  var formSuccess = document.querySelector('.success');
 
   // Оганичивает число гостей в зависимости от числа комнат
   var limitGueststOptions = function (roomCount, roomCapacity) {
@@ -49,4 +51,16 @@
   // Добавление обработчиков кол-ва мест от кол-ва комнат
   formSelectRoomCount.addEventListener('change', onSelectRoomCountChange);
   formSelectRoomCapacity.addEventListener('change', onSelectRoomCountChange);
+
+  window.form.formAd.addEventListener('submit', function (evt) {
+    window.backend.requestServerData(
+        function () {
+          formSuccess.classList.remove('hidden');
+        },
+        window.form.displayError,
+        new FormData(window.form.formAd)
+    );
+    evt.preventDefault();
+  });
 })();
+
