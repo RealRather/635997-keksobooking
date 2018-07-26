@@ -16,8 +16,6 @@
   var mapPinsElement = globalMap.querySelector('.map__pins');
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
-  var formInputAddress = document.querySelector('#address');
-
   var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 
   // Создание метки в объявлении
@@ -54,7 +52,7 @@
   var assignAddressMapPin = function (isMapPin) {
     var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
     var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
-    formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
+    window.form.formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
   };
 
   // Присваивает адрес главной метке(карта не активна)
@@ -65,7 +63,7 @@
     // Переключает карту в активное состояние
     globalMap.classList.remove('map--faded');
     // Разблокирует поля формы
-    window.formAd.classList.remove('ad-form--disabled');
+    window.form.formAd.classList.remove('ad-form--disabled');
     mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
     // Присваивает адрес главной метке(карта активна)
     assignAddressMapPin(false);
