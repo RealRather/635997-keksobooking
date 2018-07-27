@@ -8,6 +8,7 @@
   var formSelectTimeIn = formAd.querySelector('#timein');
   var formSelectTimeOut = formAd.querySelector('#timeout');
   var formInputAddress = formAd.querySelector('#address');
+  var formButtonReset = formAd.querySelector('.ad-form__reset');
 
   var switchStateFieldset = function (fieldsetState) {
     for (var i = 0; i < formFieldsets.length; i++) {
@@ -31,10 +32,6 @@
     synceTime(formSelectTimeIn, formSelectTimeOut);
   };
 
-  // Добавление обработчиков синхронизации времени заезда и выезда
-  formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
-  formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
-
   var displayError = function (errorMessage) {
     var node = document.createElement('div');
 
@@ -57,6 +54,20 @@
     node.textContent = errorMessage;
     document.body.appendChild(node);
   };
+
+  var onButtonResetFormClick = function () {
+    formAd.reset();
+    // window.map.assignAddressMapPin();
+    window.map.blockMapState();
+    formButtonReset.removeEventListener('click', onButtonResetFormClick);
+  };
+
+  // Добавление обработчиков синхронизации времени заезда и выезда
+  formSelectTimeIn.addEventListener('change', onSelectTimeInChange);
+  formSelectTimeOut.addEventListener('change', onSelectTimeOutChange);
+
+  // Добавление обработчика на кнопку "Очистить"
+  formButtonReset.addEventListener('click', onButtonResetFormClick);
 
   window.form = {
     formAd: formAd,
