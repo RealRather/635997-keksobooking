@@ -70,7 +70,6 @@
 
     var closePopup = function () {
       mapCard.classList.add('hidden');
-      window.map.globalMap.removeChild(mapCard);
       document.removeEventListener('keydown', onPopupEscPress);
     };
 

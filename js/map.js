@@ -5,7 +5,7 @@
   var MAP_PIN_HEIGHT = 65;
 
   var MAP_PIN_INITIAL_WIDTH = 50;
-  var MAP_PIN_INITIAL_HEIHT = 70;
+  var MAP_PIN_INITIAL_HEIGHT = 70;
 
   var LOCATION_Y_MIN = 130;
   var LOCATION_Y_MAX = 630;
@@ -17,6 +17,8 @@
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
   var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
+
+  var isActiveMapState = false;
 
   // Создание метки в объявлении
   var getGeneratedPinAdvert = function (mapPin) {
@@ -51,24 +53,44 @@
   // Присваивает адрес главной метке
   var assignAddressMapPin = function (isMapPin) {
     var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
-    var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIHT : MAP_PIN_HEIGHT;
+    var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIGHT : MAP_PIN_HEIGHT;
     window.form.formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
   };
 
   // Присваивает адрес главной метке(карта не активна)
   assignAddressMapPin(true);
 
-  var onButtonMainPinMouseUp = function () {
+  var blockMapState = function () {
+    isActiveMapState = false;
+    window.form.switchStateFieldset(true);
+    // Переключает карту в неактивное состояние
+    globalMap.classList.add('map--faded');
+    // Блокирует поля формы
+    window.form.formAd.classList.add('ad-form--disabled');
+    // Присваивает адрес главной метке(карта не активна)
+    assignAddressMapPin(true);
+    mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
+  };
+
+  var activateMapState = function () {
+    isActiveMapState = true;
     window.form.switchStateFieldset(false);
     // Переключает карту в активное состояние
     globalMap.classList.remove('map--faded');
     // Разблокирует поля формы
     window.form.formAd.classList.remove('ad-form--disabled');
-    mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
     // Присваивает адрес главной метке(карта активна)
     assignAddressMapPin(false);
+  };
+
+  var onButtonMainPinMouseUp = function () {
+    if (!isActiveMapState) {
+      activateMapState();
+    }
+    mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
+
 
   // Получает индекс узла
   var getIndexNode = function (documentNode) {
@@ -84,6 +106,7 @@
         window.generateAdverts.adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
     globalMap.insertBefore(randomCard, mapContainer);
+    mapPinsElement.removeEventListener('click', onButtonRandomPinClick);
   };
 
   // Добавление обработчика для меток и карты
@@ -163,6 +186,8 @@
     globalMap: globalMap,
     mapContainer: mapContainer,
     LOCATION_Y_MIN: LOCATION_Y_MIN,
-    LOCATION_Y_MAX: LOCATION_Y_MAX
+    LOCATION_Y_MAX: LOCATION_Y_MAX,
+    blockMapState: blockMapState,
+    assignAddressMapPin: assignAddressMapPin
   };
 })();
