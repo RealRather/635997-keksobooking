@@ -39,6 +39,12 @@
     return pinFragment;
   };
 
+  // Установление главного пина в исходное состояние
+  var setDefaultAddressMapPin = function () {
+    mapMainPin.style.left = Math.round((globalMap.offsetWidth - mapMainPin.offsetWidth) / 2) + 'px';
+    mapMainPin.style.top = Math.round((globalMap.offsetHeight - LOCATION_Y_MIN) / 2) + mapMainPin.offsetHeight + 'px';
+  };
+
   // Определяет адрес метки
   var determineAddressMapPin = function (heightPin, widthPin, pin) {
     var pinLocationY = heightPin + parseInt(pin.style.top, 10);
@@ -58,6 +64,7 @@
   };
 
   // Присваивает адрес главной метке(карта не активна)
+  setDefaultAddressMapPin();
   assignAddressMapPin(true);
 
   var blockMapState = function () {
@@ -68,6 +75,7 @@
     // Блокирует поля формы
     window.form.formAd.classList.add('ad-form--disabled');
     // Присваивает адрес главной метке(карта не активна)
+    setDefaultAddressMapPin();
     assignAddressMapPin(true);
     mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
   };
@@ -91,7 +99,6 @@
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
 
-
   // Получает индекс узла
   var getIndexNode = function (documentNode) {
     var nodes = Array.prototype.slice.call(documentNode.parentNode.children);
@@ -106,7 +113,6 @@
         window.generateAdverts.adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
     globalMap.insertBefore(randomCard, mapContainer);
-    mapPinsElement.removeEventListener('click', onButtonRandomPinClick);
   };
 
   // Добавление обработчика для меток и карты
