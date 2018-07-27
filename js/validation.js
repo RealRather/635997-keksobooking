@@ -19,7 +19,6 @@
   var formSelectRoomCapacity = window.form.formAd.querySelector('#capacity');
   var formSelectType = window.form.formAd.querySelector('#type');
   var formSelectPrice = window.form.formAd.querySelector('#price');
-  // var formButtonSubmit = window.form.formAd.querySelector('.ad-form__submit');
   var formSuccess = document.querySelector('.success');
 
   // Оганичивает число гостей в зависимости от числа комнат
@@ -45,6 +44,10 @@
     determinePrice(formSelectType, formSelectPrice);
   };
 
+  var onSuccessPopupEscPress = function () {
+    formSuccess.classList.add('hidden');
+  };
+
   // Добавление обработчика цены в зависимости от типа жилья
   formSelectType.addEventListener('change', onSelectPriceChange);
 
@@ -56,6 +59,16 @@
     window.backend.requestServerData(
         function () {
           formSuccess.classList.remove('hidden');
+          window.map.blockMapState();
+          window.form.formAd.reset();
+          document.addEventListener('keydown', function (evtK) {
+            window.util.isEscKeyCode(evtK, onSuccessPopupEscPress);
+            window.map.assignAddressMapPin();
+          });
+          formSuccess.addEventListener('click', function () {
+            formSuccess.classList.add('hidden');
+            window.map.assignAddressMapPin();
+          });
         },
         window.form.displayError,
         new FormData(window.form.formAd)

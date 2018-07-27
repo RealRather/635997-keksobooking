@@ -13,7 +13,7 @@
   var LOCATION_X_MIN = 300;
   var LOCATION_X_MAX = 900;
 
-  var AMOUNT_ADVERTS = 8;
+  var AMOUNT_ADVERTS = 5;
 
   var TITLES =
     [
