@@ -14,6 +14,7 @@
 
   var globalMap = document.querySelector('.map');
   var mapPinsElement = globalMap.querySelector('.map__pins');
+
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
   var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
@@ -69,7 +70,25 @@
 
   var blockMapState = function () {
     isActiveMapState = false;
+    var mapPins = document.querySelectorAll('.map__pin');
+    var mapCard = document.querySelector('.map__card');
+
+    var closePin = function () {
+      mapPins.forEach(function (element) {
+        if (element.className === 'map__pin') {
+          element.remove();
+        }
+      });
+    };
+
+    var closeCard = function () {
+      if (mapCard) {
+        mapCard.remove();
+      }
+    };
     window.form.switchStateFieldset(true);
+    closePin();
+    closeCard();
     // Переключает карту в неактивное состояние
     globalMap.classList.add('map--faded');
     // Блокирует поля формы
@@ -94,8 +113,8 @@
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
+      mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
     }
-    mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
 
@@ -194,6 +213,6 @@
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
     blockMapState: blockMapState,
-    assignAddressMapPin: assignAddressMapPin
+    assignAddressMapPin: assignAddressMapPin,
   };
 })();

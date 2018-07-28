@@ -53,7 +53,7 @@
     mapCard.querySelector('.popup__photos').appendChild(renderPhotoAdvert(objAdvert.offer.photos));
     mapCard.querySelector('.popup__avatar').src = objAdvert.author.avatar;
 
-    var popupCardClose = mapCard.querySelector('.popup__close');
+    var popupClose = mapCard.querySelector('.popup__close');
     var popupCard = window.map.globalMap.querySelector('.map__card');
 
     if (!popupCard) {
@@ -73,9 +73,10 @@
       document.removeEventListener('keydown', onPopupEscPress);
     };
 
-    popupCardClose.addEventListener('click', function () {
+    popupClose.addEventListener('click', function () {
       closePopup();
     });
+
     return mapCard;
   };
 

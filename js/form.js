@@ -57,8 +57,8 @@
 
   var onButtonResetFormClick = function () {
     formAd.reset();
-    // window.map.assignAddressMapPin();
     window.map.blockMapState();
+    window.map.assignAddressMapPin();
     formButtonReset.removeEventListener('click', onButtonResetFormClick);
   };
 
