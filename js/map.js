@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var MAP_PIN_WIDTH = 65;
-  var MAP_PIN_HEIGHT = 65;
-
   var MAP_PIN_INITIAL_WIDTH = 50;
   var MAP_PIN_INITIAL_HEIGHT = 70;
 
@@ -14,31 +11,10 @@
 
   var globalMap = document.querySelector('.map');
   var mapPinsElement = globalMap.querySelector('.map__pins');
-
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
-  var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 
   var isActiveMapState = false;
-
-  // Создание метки в объявлении
-  var getGeneratedPinAdvert = function (mapPin) {
-    var pinAdvert = templateMapPin.cloneNode(true);
-    pinAdvert.style.top = mapPin.location.y - MAP_PIN_HEIGHT + 'px';
-    pinAdvert.style.left = mapPin.location.x - MAP_PIN_WIDTH / 2 + 'px';
-    pinAdvert.querySelector('img').alt = mapPin.offer.title;
-    pinAdvert.querySelector('img').src = mapPin.author.avatar;
-    return pinAdvert;
-  };
-
-  // Добавляет метки на страницу
-  var createPins = function (arrayAdverts) {
-    var pinFragment = document.createDocumentFragment();
-    for (var i = 0; i < arrayAdverts.length; i++) {
-      pinFragment.appendChild(getGeneratedPinAdvert(arrayAdverts[i]));
-    }
-    return pinFragment;
-  };
 
   // Установление главного пина в исходное состояние
   var setDefaultAddressMapPin = function () {
@@ -59,8 +35,8 @@
 
   // Присваивает адрес главной метке
   var assignAddressMapPin = function (isMapPin) {
-    var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : MAP_PIN_WIDTH;
-    var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIGHT : MAP_PIN_HEIGHT;
+    var widthMapPin = isMapPin ? MAP_PIN_INITIAL_WIDTH : window.pins.MAP_PIN_WIDTH;
+    var heightMapPin = isMapPin ? MAP_PIN_INITIAL_HEIGHT : window.pins.MAP_PIN_HEIGHT;
     window.form.formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
   };
 
@@ -113,7 +89,7 @@
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
-      mapPinsElement.appendChild(createPins(window.generateAdverts.adverts));
+      mapPinsElement.appendChild(window.pins.createPins(window.generateAdverts.adverts));
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
