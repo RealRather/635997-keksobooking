@@ -60,13 +60,14 @@
         function () {
           formSuccess.classList.remove('hidden');
           window.map.blockMapState();
-          window.map.assignAddressMapPin();
           window.form.formAd.reset();
           document.addEventListener('keydown', function (evtK) {
             window.util.isEscKeyCode(evtK, onSuccessPopupEscPress);
+            window.map.assignAddressMapPin(true);
           });
           formSuccess.addEventListener('click', function () {
             formSuccess.classList.add('hidden');
+            window.map.assignAddressMapPin(true);
           });
         },
         window.form.displayError,

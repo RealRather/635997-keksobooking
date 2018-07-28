@@ -15,9 +15,6 @@
   var globalMap = document.querySelector('.map');
   var mapPinsElement = globalMap.querySelector('.map__pins');
 
-  var mapPins = document.querySelectorAll('.map__pin');
-  var mapC = document.querySelector('.map__card');
-
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
   var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
@@ -71,25 +68,27 @@
   setDefaultAddressMapPin();
   assignAddressMapPin(true);
 
-  var closeC = function () {
-    if (mapC) {
-      mapC.remove();
-    }
-  };
-
-  var closePin = function () {
-    if (closePin) {
-      for (var j = 0; j < mapPins.length; j++) {
-        mapPins[j].remove();
-      }
-    }
-  };
-
   var blockMapState = function () {
     isActiveMapState = false;
+    var mapPins = document.querySelectorAll('.map__pin');
+    var mapCard = document.querySelector('.map__card');
+
+    var closePin = function () {
+      mapPins.forEach(function (element) {
+        if (element.className === 'map__pin') {
+          element.remove();
+        }
+      });
+    };
+
+    var closeCard = function () {
+      if (mapCard) {
+        mapCard.remove();
+      }
+    };
     window.form.switchStateFieldset(true);
     closePin();
-    closeC();
+    closeCard();
     // Переключает карту в неактивное состояние
     globalMap.classList.add('map--faded');
     // Блокирует поля формы
