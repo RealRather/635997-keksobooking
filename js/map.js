@@ -103,10 +103,8 @@
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
-      window.pins.mapPinsElement.appendChild(
-          window.pins.createPins(
-              getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)
-          )
+      window.pins.renderMapPins(
+          getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)
       );
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
