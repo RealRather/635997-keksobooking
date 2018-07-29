@@ -11,7 +11,6 @@
   var AMOUNT_ADVERTS = 5;
 
   var globalMap = document.querySelector('.map');
-  var mapPinsElement = globalMap.querySelector('.map__pins');
   var mapContainer = document.querySelector('.map__filters-container');
   var mapMainPin = document.querySelector('.map__pin--main');
 
@@ -104,7 +103,11 @@
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
-      mapPinsElement.appendChild(window.pins.createPins(getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)));
+      window.pins.mapPinsElement.appendChild(
+          window.pins.createPins(
+              getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)
+          )
+      );
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
@@ -126,7 +129,7 @@
   };
 
   // Добавление обработчика для меток и карты
-  mapPinsElement.addEventListener('click', onButtonRandomPinClick);
+  window.pins.mapPinsElement.addEventListener('click', onButtonRandomPinClick);
   mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
 
   // Перемещение главного маркера по карте

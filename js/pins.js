@@ -4,6 +4,7 @@
   var MAP_PIN_WIDTH = 65;
   var MAP_PIN_HEIGHT = 65;
 
+  var mapPinsElement = document.querySelector('.map__pins');
   var templateMapPin = document.querySelector('template').content.querySelector('.map__pin');
 
   // Создание метки в объявлении
@@ -33,6 +34,7 @@
   };
 
   window.pins = {
+    mapPinsElement: mapPinsElement,
     MAP_PIN_WIDTH: MAP_PIN_WIDTH,
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
     createPins: createPins,
