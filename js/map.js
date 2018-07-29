@@ -8,6 +8,7 @@
   var LOCATION_Y_MAX = 630;
 
   var AUXILIARY_ELEMENTS_COUNT = 2;
+  var AMOUNT_ADVERTS = 5;
 
   var globalMap = document.querySelector('.map');
   var mapPinsElement = globalMap.querySelector('.map__pins');
@@ -86,10 +87,28 @@
     assignAddressMapPin(false);
   };
 
+  var getArrayAdverts = function (countObject, array) {
+    var arrayAdverts = array ? array.slice() : [];
+    arrayAdverts.splice(countObject);
+    return arrayAdverts;
+  };
+
+  // Добавляет данные
+  if (!globalMap.data) {
+    window.backend.requestServerData(function (data) {
+      globalMap.data = data.slice();
+      getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+    },
+    window.form.displayError
+    );
+  } else {
+    getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+  }
+
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
-      mapPinsElement.appendChild(window.pins.createPins(window.generateAdverts.adverts));
+      mapPinsElement.appendChild(window.pins.createPins(getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)));
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
   };
@@ -105,7 +124,7 @@
       return;
     }
     var randomCard = window.createCard.getGeneratedCard(
-        window.generateAdverts.adverts[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
+        getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
     globalMap.insertBefore(randomCard, mapContainer);
   };
