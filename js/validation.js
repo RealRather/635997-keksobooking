@@ -25,8 +25,17 @@
   var limitGueststOptions = function (roomCount, roomCapacity) {
     var limitGuests = GUESTS_DEPENDING_ROOMS[roomCount.value];
     roomCapacity.setCustomValidity('');
+    roomCount.setCustomValidity('');
     if (limitGuests.indexOf(parseInt(roomCapacity.value, 10)) < 0) {
-      roomCapacity.setCustomValidity('Число гостей не подходит для данного количества комнат');
+      if (roomCount.value !== '100' && roomCapacity.value === '0') {
+        roomCapacity.setCustomValidity('Вариант "не для гостей" предусмотрен только для 100 комнат');
+      } else if (roomCount.value === '100' && roomCapacity.value !== '0') {
+        roomCapacity.setCustomValidity('Данное количество комнат не для гостей');
+      } else if (roomCount.value >= roomCapacity.value) {
+        roomCapacity.setCustomValidity('');
+      } else {
+        roomCapacity.setCustomValidity('Для каждого гостя предусмотрена максимум одна комната');
+      }
     }
   };
 
