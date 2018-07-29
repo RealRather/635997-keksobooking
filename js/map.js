@@ -208,6 +208,7 @@
     blockMapState: blockMapState,
     getArrayAdverts: getArrayAdverts,
     assignAddressMapPin: assignAddressMapPin,
+    onButtonRandomPinClick: onButtonRandomPinClick,
     closeCard: closeCard
   };
 })();
