@@ -15,6 +15,7 @@
   var mapMainPin = document.querySelector('.map__pin--main');
 
   var isActiveMapState = false;
+  window.arrayData = [];
 
   // Установление главного пина в исходное состояние
   var setDefaultAddressMapPin = function () {
@@ -61,6 +62,7 @@
   if (!globalMap.data) {
     window.backend.requestServerData(function (data) {
       globalMap.data = data.slice();
+      window.arrayData = globalMap.data;
       getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
     },
     window.form.displayError
@@ -208,5 +210,6 @@
     blockMapState: blockMapState,
     getArrayAdverts: getArrayAdverts,
     assignAddressMapPin: assignAddressMapPin,
+    closeCard: closeCard
   };
 })();

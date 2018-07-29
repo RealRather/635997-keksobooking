@@ -8,12 +8,14 @@
   var filterHousingGuests = mapFilters.querySelector('#housing-guests');
   var filterHousingFeatures = mapFilters.querySelector('#housing__features');*/
 
-  var filterType = function (data) {
-    return filterHousingType.value === 'any' || data.offer.type === filterHousingType;
+  var filterType = function (arrayData) {
+    return filterHousingType.value === 'any' || arrayData.offer.type === filterHousingType.value;
   };
 
   var onFormFilterChange = function () {
-    var filterResultArray = window.map.globalMap.filter(filterType);
+    var filterResultArray = window.arrayData.filter(filterType);
+    window.pins.removeAllPins();
+    window.map.closeCard();
     window.pins.renderMapPins(
         window.map.getArrayAdverts(
             window.map.AMOUNT_ADVERTS, filterResultArray
