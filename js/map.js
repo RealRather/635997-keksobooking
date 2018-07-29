@@ -15,7 +15,6 @@
   var mapMainPin = document.querySelector('.map__pin--main');
 
   var isActiveMapState = false;
-  window.arrayData = [];
 
   // Установление главного пина в исходное состояние
   var setDefaultAddressMapPin = function () {
@@ -59,16 +58,15 @@
   };
 
   // Добавляет данные
-  if (!globalMap.data) {
+  if (!window.arrayData) {
     window.backend.requestServerData(function (data) {
-      globalMap.data = data.slice();
-      window.arrayData = globalMap.data;
-      getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+      window.arrayData = data.slice();
+      getArrayAdverts(AMOUNT_ADVERTS, window.arrayData);
     },
     window.form.displayError
     );
   } else {
-    getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+    getArrayAdverts(AMOUNT_ADVERTS, window.arrayData);
   }
 
   var blockMapState = function () {
@@ -106,7 +104,7 @@
     if (!isActiveMapState) {
       activateMapState();
       window.pins.renderMapPins(
-          getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)
+          getArrayAdverts(AMOUNT_ADVERTS, window.arrayData)
       );
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
@@ -123,7 +121,7 @@
       return;
     }
     var randomCard = window.createCard.getGeneratedCard(
-        getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
+        getArrayAdverts(AMOUNT_ADVERTS, window.arrayData)[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
     globalMap.insertBefore(randomCard, mapContainer);
   };

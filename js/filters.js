@@ -17,9 +17,7 @@
     window.pins.removeAllPins();
     window.map.closeCard();
     window.pins.renderMapPins(
-        window.map.getArrayAdverts(
-            window.map.AMOUNT_ADVERTS, filterResultArray
-        )
+        window.map.getArrayAdverts(filterResultArray.length, filterResultArray)
     );
   };
 
