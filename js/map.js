@@ -204,7 +204,9 @@
     mapContainer: mapContainer,
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
+    AMOUNT_ADVERTS: AMOUNT_ADVERTS,
     blockMapState: blockMapState,
+    getArrayAdverts: getArrayAdverts,
     assignAddressMapPin: assignAddressMapPin,
   };
 })();
