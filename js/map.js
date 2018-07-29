@@ -52,6 +52,24 @@
   setDefaultAddressMapPin();
   assignAddressMapPin(true);
 
+  var getArrayAdverts = function (countObject, array) {
+    var arrayAdverts = array ? array.slice() : [];
+    arrayAdverts.splice(countObject);
+    return arrayAdverts;
+  };
+
+  // Добавляет данные
+  if (!globalMap.data) {
+    window.backend.requestServerData(function (data) {
+      globalMap.data = data.slice();
+      getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+    },
+    window.form.displayError
+    );
+  } else {
+    getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+  }
+
   var blockMapState = function () {
     isActiveMapState = false;
 
@@ -82,24 +100,6 @@
     //  обработчик на кнопке "Очистить"
     window.form.formButtonReset.addEventListener('click', window.form.onButtonResetFormClick);
   };
-
-  var getArrayAdverts = function (countObject, array) {
-    var arrayAdverts = array ? array.slice() : [];
-    arrayAdverts.splice(countObject);
-    return arrayAdverts;
-  };
-
-  // Добавляет данные
-  if (!globalMap.data) {
-    window.backend.requestServerData(function (data) {
-      globalMap.data = data.slice();
-      getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
-    },
-    window.form.displayError
-    );
-  } else {
-    getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
-  }
 
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
