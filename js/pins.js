@@ -17,13 +17,13 @@
     return pinAdvert;
   };
 
-  // Добавляет метки на страницу
-  var createPins = function (arrayAdverts) {
+  // Отрисовывает метки на страницу
+  var renderMapPins = function (data) {
     var pinFragment = document.createDocumentFragment();
-    for (var i = 0; i < arrayAdverts.length; i++) {
-      pinFragment.appendChild(getGeneratedPinAdvert(arrayAdverts[i]));
+    for (var i = 0; i < data.length; i++) {
+      pinFragment.appendChild(getGeneratedPinAdvert(data[i]));
     }
-    return pinFragment;
+    mapPinsElement.appendChild(pinFragment);
   };
 
   var removeAllPins = function () {
@@ -37,7 +37,7 @@
     mapPinsElement: mapPinsElement,
     MAP_PIN_WIDTH: MAP_PIN_WIDTH,
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
-    createPins: createPins,
+    renderMapPins: renderMapPins,
     removeAllPins: removeAllPins
   };
 })();

@@ -58,15 +58,15 @@
   };
 
   // Добавляет данные
-  if (!globalMap.data) {
+  if (!window.arrayData) {
     window.backend.requestServerData(function (data) {
-      globalMap.data = data.slice();
-      getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+      window.arrayData = data.slice();
+      getArrayAdverts(AMOUNT_ADVERTS, window.arrayData);
     },
     window.form.displayError
     );
   } else {
-    getArrayAdverts(AMOUNT_ADVERTS, globalMap.data);
+    getArrayAdverts(AMOUNT_ADVERTS, window.arrayData);
   }
 
   var blockMapState = function () {
@@ -103,10 +103,8 @@
   var onButtonMainPinMouseUp = function () {
     if (!isActiveMapState) {
       activateMapState();
-      window.pins.mapPinsElement.appendChild(
-          window.pins.createPins(
-              getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)
-          )
+      window.pins.renderMapPins(
+          getArrayAdverts(AMOUNT_ADVERTS, window.arrayData)
       );
     }
     mapMainPin.removeEventListener('mouseup', onButtonMainPinMouseUp);
@@ -123,7 +121,7 @@
       return;
     }
     var randomCard = window.createCard.getGeneratedCard(
-        getArrayAdverts(AMOUNT_ADVERTS, globalMap.data)[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
+        getArrayAdverts(AMOUNT_ADVERTS, window.arrayData)[getIndexNode(documentNode) - AUXILIARY_ELEMENTS_COUNT]
     );
     globalMap.insertBefore(randomCard, mapContainer);
   };
@@ -206,7 +204,10 @@
     mapContainer: mapContainer,
     LOCATION_Y_MIN: LOCATION_Y_MIN,
     LOCATION_Y_MAX: LOCATION_Y_MAX,
+    AMOUNT_ADVERTS: AMOUNT_ADVERTS,
     blockMapState: blockMapState,
+    getArrayAdverts: getArrayAdverts,
     assignAddressMapPin: assignAddressMapPin,
+    closeCard: closeCard
   };
 })();
