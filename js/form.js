@@ -72,6 +72,8 @@
   window.form = {
     formAd: formAd,
     formInputAddress: formInputAddress,
+    formButtonReset: formButtonReset,
+    onButtonResetFormClick: onButtonResetFormClick,
     switchStateFieldset: switchStateFieldset,
     displayError: displayError
   };

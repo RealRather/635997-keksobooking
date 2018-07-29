@@ -41,30 +41,22 @@
     window.form.formInputAddress.value = determineAddressMapPin(heightMapPin, widthMapPin, mapMainPin);
   };
 
+  var closeCard = function () {
+    var mapCard = document.querySelector('.map__card');
+    if (mapCard) {
+      mapCard.remove();
+    }
+  };
+
   // Присваивает адрес главной метке(карта не активна)
   setDefaultAddressMapPin();
   assignAddressMapPin(true);
 
   var blockMapState = function () {
     isActiveMapState = false;
-    var mapPins = document.querySelectorAll('.map__pin');
-    var mapCard = document.querySelector('.map__card');
 
-    var closePin = function () {
-      mapPins.forEach(function (element) {
-        if (element.className === 'map__pin') {
-          element.remove();
-        }
-      });
-    };
-
-    var closeCard = function () {
-      if (mapCard) {
-        mapCard.remove();
-      }
-    };
     window.form.switchStateFieldset(true);
-    closePin();
+    window.pins.removeAllPins();
     closeCard();
     // Переключает карту в неактивное состояние
     globalMap.classList.add('map--faded');
@@ -73,6 +65,7 @@
     // Присваивает адрес главной метке(карта не активна)
     setDefaultAddressMapPin();
     assignAddressMapPin(true);
+
     mapMainPin.addEventListener('mouseup', onButtonMainPinMouseUp);
   };
 
@@ -85,6 +78,9 @@
     window.form.formAd.classList.remove('ad-form--disabled');
     // Присваивает адрес главной метке(карта активна)
     assignAddressMapPin(false);
+
+    //  обработчик на кнопке "Очистить"
+    window.form.formButtonReset.addEventListener('click', window.form.onButtonResetFormClick);
   };
 
   var getArrayAdverts = function (countObject, array) {

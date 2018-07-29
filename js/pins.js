@@ -25,10 +25,18 @@
     return pinFragment;
   };
 
+  var removeAllPins = function () {
+    var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPins.forEach(function (element) {
+      element.remove();
+    });
+  };
+
   window.pins = {
     MAP_PIN_WIDTH: MAP_PIN_WIDTH,
     MAP_PIN_HEIGHT: MAP_PIN_HEIGHT,
-    createPins: createPins
+    createPins: createPins,
+    removeAllPins: removeAllPins
   };
 })();
 
